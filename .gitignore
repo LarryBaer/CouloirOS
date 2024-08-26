@@ -1,5 +1,4 @@
 *.iso
 *.o
 isodir
-sysroot
 couloiros.bin

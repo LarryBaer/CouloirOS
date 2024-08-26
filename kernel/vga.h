@@ -17,4 +17,4 @@ enum vga_color {
     VGA_COLOR_WHITE = 15,
 };
 
-void terminal_write(const char* data);
+void print(const char* data);

@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include "gdt.h"
 #include "vga.h"
 
 static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg) {
@@ -26,7 +27,7 @@ size_t terminal_column;
 uint8_t terminal_color;
 uint16_t* terminal_buffer;
 
-void terminal_initialize(void) {
+void init_terminal(void) {
     terminal_row = 0;
     terminal_column = 0;
     terminal_color = vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
@@ -39,11 +40,7 @@ void terminal_initialize(void) {
     }
 }
 
-void terminal_setcolor(uint8_t color) {
-    terminal_color = color;
-}
-
-void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
+void put_entry_at(char c, uint8_t color, size_t x, size_t y) {
     const size_t index = y * VGA_WIDTH + x;
     terminal_buffer[index] = vga_entry(c, color);
 }
@@ -53,7 +50,7 @@ void scroll() {
         for (size_t j = 0; j < VGA_WIDTH; j++) {
             const size_t characterBelowLocation = (i + 1) * VGA_WIDTH + j;
             char currentCharacter = terminal_buffer[characterBelowLocation];
-            terminal_putentryat(currentCharacter, terminal_color, j, i);
+            put_entry_at(currentCharacter, terminal_color, j, i);
         }
     }
 
@@ -66,12 +63,12 @@ void scroll() {
     terminal_row--;
 }
 
-void terminal_putchar(char c) {
+void put_character(char c) {
     if (c == '\n') {
         terminal_row++;
         terminal_column = 0;
     } else {
-        terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+        put_entry_at(c, terminal_color, terminal_column, terminal_row);
         terminal_column++;
     }
 
@@ -85,12 +82,13 @@ void terminal_putchar(char c) {
     }
 }
 
-void terminal_write(const char* data) {
+void print(const char* data) {
     size_t size = strlen(data);
-    for (size_t i = 0; i < size; i++) terminal_putchar(data[i]);
+    for (size_t i = 0; i < size; i++) put_character(data[i]);
 }
 
 void kernel_main(void) {
-    terminal_initialize();
-    terminal_write("Hello, world!\n");
+    init_terminal();
+    init_gdt();
+    print("Hello, world!\n");
 }
