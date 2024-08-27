@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "gdt.h"
+#include "idt.h"
 #include "vga.h"
 
 static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg) {
@@ -89,6 +90,7 @@ void print(const char* data) {
 
 void kernel_main(void) {
     init_terminal();
+    init_idt();
     init_gdt();
     print("Hello, world!\n");
 }

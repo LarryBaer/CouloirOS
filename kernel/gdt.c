@@ -44,6 +44,6 @@ void init_gdt(){
     insert_gdt_entry(3, 0, 0xFFFFFFFF, 0xFA, 0xCF);	// User mode code segment
 	insert_gdt_entry(4, 0, 0xFFFFFFFF, 0xF2, 0xCF);	// User mode data segment
     write_tss(5, 0x10, 0x0);
-    set_gdtr((uint32_t)&gdt);
+    set_gdtr((uint32_t) &gdt);
     set_ltr();
 }
