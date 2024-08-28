@@ -1,6 +1,8 @@
 #include "stdint.h"
-#include "vga.h"
-#include "idt.h"
+#include "./include/terminal.h"
+#include "./include/idt.h"
+#include "../lib/include/stdio.h"
+#include "../lib/include/string.h"
 
 #define INTERRUPT_VECTOR_COUNT 256
 
@@ -57,9 +59,9 @@ void irq_handler(InterruptRegisters* registers){
 }
 
 void isr_handler(InterruptRegisters* registers){
-    print("\nSystem crashed :(\n");
-    print("Error: ");
-    print(exception_messages[registers->int_no]);
+    printf("\nSystem crashed :(\n");
+    printf("Error: ");
+    printf(exception_messages[registers->int_no]);
     while(1);
 }
 

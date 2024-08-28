@@ -1,3 +1,6 @@
+#ifndef TERMINAL_H
+#define TERMINAL_H
+
 enum vga_color {
     VGA_COLOR_BLACK = 0,
     VGA_COLOR_BLUE = 1,
@@ -17,5 +20,7 @@ enum vga_color {
     VGA_COLOR_WHITE = 15,
 };
 
-void print(const char* data);
-void printf(const char* data, ...);
+void putchar(char c);
+void init_terminal();
+
+#endif

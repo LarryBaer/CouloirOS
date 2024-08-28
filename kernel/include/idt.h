@@ -1,4 +1,6 @@
-#include "util.h"
+#include "./util.h"
+#ifndef IDT_H
+#define IDT_H
 
 typedef struct{
     uint16_t base_low;
@@ -67,3 +69,5 @@ extern void irq12();
 extern void irq13();
 extern void irq14();
 extern void irq15();
+
+#endif

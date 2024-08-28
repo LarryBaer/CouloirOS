@@ -1,3 +1,6 @@
+#ifndef UTIL_H
+#define UTIL_H
+
 typedef struct {
     uint32_t cr2;
     uint32_t ds;
@@ -6,6 +9,7 @@ typedef struct {
     uint32_t eip, csm, eflags, useresp, ss;
 } InterruptRegisters;
 
-void memset(void* destination, char val, uint32_t count);
 char inPortB(uint16_t port);
 void outPortB(uint16_t port, uint8_t value);
+
+#endif

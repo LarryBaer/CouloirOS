@@ -1,3 +1,6 @@
+#ifndef GDT_H
+#define GDT_H
+
 typedef struct {
     uint16_t limit_low;        // Lower 16 bits of the segment limit
     uint16_t base_low;         // Lower 16 bits of the base address
@@ -43,3 +46,5 @@ typedef struct {
 }__attribute__((packed)) TSSEntry;
 
 void init_gdt();
+
+#endif

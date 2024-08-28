@@ -1,12 +1,5 @@
 #include <stdint.h>
-#include "util.h"
-
-void memset(void* destination, char val, uint32_t count){
-    char* temp = (char*) destination;
-    for(; count != 0; count--){
-        *temp++ = val;
-    }
-}
+#include "./include/util.h"
 
 // Takes in a byte of data from specified port
 char inPortB(uint16_t port){

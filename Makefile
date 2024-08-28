@@ -1,23 +1,38 @@
+CC = i686-elf-gcc
+LD = i686-elf-gcc
+AS = i686-elf-as
 CFLAGS = -c -g -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+LDFLAGS = -ffreestanding -O2 -nostdlib -lgcc
 
-all:
-	i686-elf-as ./kernel/boot.s -o boot.o
-	i686-elf-as ./kernel/gdt.s -o gdt_asm.o
-	i686-elf-as ./kernel/idt.s -o idt_asm.o
-	i686-elf-gcc $(CFLAGS) ./kernel/kernel.c -o kernel.o
-	i686-elf-gcc $(CFLAGS) ./kernel/gdt.c -o gdt.o
-	i686-elf-gcc $(CFLAGS) ./kernel/idt.c -o idt.o
-	i686-elf-gcc $(CFLAGS) ./kernel/util.c -o util.o
-	i686-elf-gcc $(CFLAGS) ./kernel/keyboard.c -o keyboard.o
-	i686-elf-gcc $(CFLAGS) ./libc/string.c -o string.o
-	i686-elf-gcc -T ./kernel/linker.ld -o couloiros.bin -ffreestanding -O2 -nostdlib -lgcc string.o keyboard.o util.o idt.o idt_asm.o gdt.o gdt_asm.o boot.o kernel.o
+CFILES := $(shell find ./ -type f -name '*.c')
+ASMFILES := $(shell find ./ -type f -name '*.s')
+
+COBJS := $(patsubst %.c,%.c.o,$(CFILES))
+AOBJS := $(patsubst %.s,%.s.o,$(ASMFILES))
+
+OBJFILES := $(COBJS) $(AOBJS)
+
+all: couloiros.iso
+
+%.c.o: %.c
+	$(CC) $(CFLAGS) $< -o $@
+
+%.s.o: %.s
+	$(AS) $< -o $@
+
+couloiros.bin: $(OBJFILES)
+	$(LD) -T ./kernel/linker.ld $(LDFLAGS) -o $@ $(OBJFILES)
+
+couloiros.iso: couloiros.bin
 	mkdir -p isodir/boot/grub
 	cp couloiros.bin isodir/boot/couloiros.bin
 	cp grub.cfg isodir/boot/grub/grub.cfg
-	grub-mkrescue -o couloiros.iso isodir
+	grub-mkrescue -o $@ isodir
 
 clean:
-	rm -f *.o
+	find . -type f -name '*.o' -delete
 	rm -f couloiros.iso
 	rm -f couloiros.bin
 	rm -rf isodir
+
+.PHONY: all clean

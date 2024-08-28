@@ -1,7 +1,9 @@
 #include <stdint.h>
 #include <stddef.h> 
-#include "gdt.h"
-#include "util.h"
+#include "./include/util.h"
+#include "./include/gdt.h"
+#include "../lib/include/string.h"
+
 #define GDT_SIZE 6
 
 extern void set_gdtr(uint32_t);

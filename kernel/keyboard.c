@@ -1,8 +1,8 @@
 #include <stdint.h>
 #include <stdbool.h>
-#include "idt.h"
-#include "keyboard.h"
-#include "vga.h"
+#include "./include/idt.h"
+#include "./include/keyboard.h"
+#include "../lib/include/stdio.h"
 
 const uint32_t UNKNOWN = 0xFFFFFFFF;
 const uint32_t ESC = 0xFFFFFFFF - 1;
