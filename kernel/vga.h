@@ -18,3 +18,4 @@ enum vga_color {
 };
 
 void print(const char* data);
+void printf(const char* data, ...);

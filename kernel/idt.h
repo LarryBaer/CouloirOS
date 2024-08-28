@@ -15,6 +15,8 @@ typedef struct{
 
 void init_idt();
 void isr_handler(InterruptRegisters* regs);
+void irq_handler(InterruptRegisters* registers);
+void irq_install_handler (int irq, void (*handler)(InterruptRegisters* registers));
 
 extern void isr0();
 extern void isr1();

@@ -26,19 +26,6 @@ char* exception_messages[] = {
     "Coprocessor Fault",
     "Alignment Fault",
     "Machine Check", 
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved"
 };
 
 IDTEntry idt_entries[INTERRUPT_VECTOR_COUNT];
@@ -57,7 +44,10 @@ void irq_uninstall_handler(int irq){
 void irq_handler(InterruptRegisters* registers){
     void (*handler)(InterruptRegisters* registers);
     handler = irq_routines[registers->int_no - 32];
-    handler(registers);
+
+    if(handler){
+        handler(registers);
+    }
 
     if (registers->int_no >= 40){
         outPortB(0xA0, 0x20);
@@ -67,7 +57,7 @@ void irq_handler(InterruptRegisters* registers){
 }
 
 void isr_handler(InterruptRegisters* registers){
-    print("System crashed :( \n");
+    print("\nSystem crashed :(\n");
     print("Error: ");
     print(exception_messages[registers->int_no]);
     while(1);

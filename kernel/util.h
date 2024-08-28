@@ -7,4 +7,5 @@ typedef struct {
 } InterruptRegisters;
 
 void memset(void* destination, char val, uint32_t count);
+char inPortB(uint16_t port);
 void outPortB(uint16_t port, uint8_t value);

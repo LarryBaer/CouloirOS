@@ -1,4 +1,5 @@
 *.iso
 *.o
 isodir
+obj
 couloiros.bin
