@@ -1,6 +1,6 @@
 CC = i686-elf-gcc
 LD = i686-elf-gcc
-AS = i686-elf-as
+AS = nasm
 CFLAGS = -c -g -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 LDFLAGS = -ffreestanding -O2 -nostdlib -lgcc
 
@@ -18,7 +18,7 @@ all: couloiros.iso
 	$(CC) $(CFLAGS) $< -o $@
 
 %.s.o: %.s
-	$(AS) $< -o $@
+	$(AS) -f elf32 $< -o $@
 
 couloiros.bin: $(OBJFILES)
 	$(LD) -T ./kernel/linker.ld $(LDFLAGS) -o $@ $(OBJFILES)

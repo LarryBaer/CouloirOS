@@ -1,94 +1,94 @@
-.global set_idt
-.extern isr_handler
-.extern irq_handler
+global set_idt
+extern isr_handler
+extern irq_handler
 
 set_idt:
-    movl 4(%esp), %eax
-    lidt (%eax)
+    mov eax, [esp + 4]
+    lidt [eax]
     sti
     ret
 
 isr_handler_wrapper:
     pusha
-    movl %ds, %eax
-    pushl %eax
-    movl %cr2, %eax
-    pushl %eax
+    mov eax, ds
+    push eax
+    mov eax, cr2
+    push eax
 
-    movw $0x10, %ax
-    movw %ax, %ds
-    movw %ax, %es
-    movw %ax, %fs
-    movw %ax, %gs
+    mov ax, 0x10
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
 
-    pushl %esp
+    push esp
     call isr_handler
 
-    addl $8, %esp
-    popl %ebx
-    movw %bx, %ds
-    movw %bx, %es
-    movw %bx, %fs
-    movw %bx, %gs
+    add esp, 8
+    pop ebx
+    mov ds, bx
+    mov es, bx
+    mov fs, bx
+    mov gs, bx
 
     popa
-    addl $8, %esp
+    add esp, 8
     sti
     iret
 
 irq_handler_wrapper:
     pusha
-    movl %ds, %eax
-    pushl %eax
-    movl %cr2, %eax
-    pushl %eax
+    mov eax, ds
+    push eax
+    mov eax, cr2
+    push eax
 
-    movw $0x10, %ax
-    movw %ax, %ds
-    movw %ax, %es
-    movw %ax, %fs
-    movw %ax, %gs
+    mov ax, 0x10
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
 
-    pushl %esp
+    push esp
     call irq_handler
 
-    addl $8, %esp
-    popl %ebx
-    movw %bx, %ds
-    movw %bx, %es
-    movw %bx, %fs
-    movw %bx, %gs
+    add esp, 8
+    pop ebx
+    mov ds, bx
+    mov es, bx
+    mov fs, bx
+    mov gs, bx
 
     popa
-    addl $8, %esp
+    add esp, 8
     sti
     iret
 
-.macro ISR_NOERRCODE num
-    .global isr\num
-isr\num:
+%macro ISR_NOERRCODE 1
+    global isr%1
+isr%1:
     cli
-    pushl $0
-    pushl $\num
+    push 0
+    push %1
     jmp isr_handler_wrapper
-.endm
+%endmacro
 
-.macro ISR_ERRCODE num
-    .global isr\num
-isr\num:
+%macro ISR_ERRCODE 1
+    global isr%1
+isr%1:
     cli
-    pushl $\num
+    push %1
     jmp isr_handler_wrapper
-.endm
+%endmacro
 
-.macro IRQ num, vector
-    .global irq\num
-irq\num:
+%macro IRQ 2
+    global irq%1
+irq%1:
     cli
-    pushl $0
-    pushl $\vector
+    push 0
+    push %2
     jmp irq_handler_wrapper
-.endm
+%endmacro
 
 ISR_NOERRCODE 0
 ISR_NOERRCODE 1

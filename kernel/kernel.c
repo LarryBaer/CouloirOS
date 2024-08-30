@@ -9,12 +9,11 @@
 #include "../lib/include/string.h"
 #include "../lib/include/stdio.h"
 
-void kernel_main(void) {
+void kernel_main() {
     init_terminal();
     init_idt();
     init_gdt();
     init_keyboard();
-
     printf("Hello, world!\n");
     for(;;);
 }

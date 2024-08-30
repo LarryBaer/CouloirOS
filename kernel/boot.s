@@ -1,32 +1,32 @@
-# Declare constants for the multiboot header. 
-.set ALIGN,    1<<0             # align loaded modules on page boundaries 
-.set MEMINFO,  1<<1             # provide memory map 
-.set FLAGS,    ALIGN | MEMINFO  # this is the Multiboot 'flag' field 
-.set MAGIC,    0x1BADB002       # 'magic number' lets bootloader find the header
-.set CHECKSUM, -(MAGIC + FLAGS) # checksum of above, to prove we are multiboot
+; Declare constants for the multiboot header.
+%define ALIGN    (1 << 0)         ; Align loaded modules on page boundaries
+%define MEMINFO  (1 << 1)         ; Provide memory map
+%define FLAGS    (ALIGN | MEMINFO) ; This is the Multiboot 'flag' field
+%define MAGIC    0x1BADB002       ; 'Magic number' lets bootloader find the header
+%define CHECKSUM -(MAGIC + FLAGS) ; Checksum of above, to prove we are multiboot
 
-# Declare multiboot header with magic values.
-.section .multiboot
-.align 4
-.long MAGIC
-.long FLAGS
-.long CHECKSUM
+; Declare multiboot header with magic values.
+section .multiboot
+    align 4
+    dd MAGIC
+    dd FLAGS
+    dd CHECKSUM
 
-# Multiboot does not define a value for esp, so we set one here.
-.section .bss
-.align 16
+section .bss
+    align 16
 stack_bottom:
-.skip 16384 # 16 KiB
+    resb 16384 
 stack_top:
 
-# Kernel entry point. 
-.section .text
-.global _start
-.type _start, @function
+; Kernel entry point.
+section .text
+global _start
 _start:
-	mov $stack_top, %esp
-	call kernel_main
-	cli
-1:	hlt
-	jmp 1b
-
+    ; Set up the stack pointer
+    mov esp, stack_top
+	extern kernel_main
+    call kernel_main
+    cli
+halt:      
+	hlt
+    jmp halt
